@@ -1,0 +1,312 @@
+/*
+Theme Name: HealthPulse Insights
+Theme URI: http://underscores.me/
+Author: HealthPulse Insights
+Author URI: https://jemson-sayre.vercel.app/
+Description: An editorial healthcare blog and resource hub theme built on the Underscores (_s) structure, with a zero-reload AJAX front end for live search, topic filtering, "Load More" pagination and newsletter signups.
+Version: 1.0.0
+Requires at least: 6.0
+Tested up to: 6.8
+Requires PHP: 7.4
+License: GNU General Public License v2 or later
+License URI: https://www.gnu.org/licenses/gpl-2.0.html
+Text Domain: healthpulse-insights
+Tags: blog, news, custom-menu, featured-images, translation-ready, two-columns
+*/
+
+
+/* ==========================================================================
+   Base
+   Tailwind (Play CDN) handles utilities; this file only holds what utilities
+   can't express cleanly: drawers, menu states, article prose, WP core classes.
+   ========================================================================== */
+
+[hidden] { display: none !important; }
+
+html { scroll-behavior: smooth; }
+
+@media (prefers-reduced-motion: reduce) {
+	html { scroll-behavior: auto; }
+	*, *::before, *::after {
+		animation-duration: 0.01ms !important;
+		transition-duration: 0.01ms !important;
+	}
+}
+
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible {
+	outline: 2px solid #0284C7;
+	outline-offset: 2px;
+}
+
+.screen-reader-text {
+	border: 0;
+	clip: rect(1px, 1px, 1px, 1px);
+	clip-path: inset(50%);
+	height: 1px;
+	margin: -1px;
+	overflow: hidden;
+	padding: 0;
+	position: absolute !important;
+	width: 1px;
+	word-wrap: normal !important;
+}
+
+.screen-reader-text:focus,
+.skip-link:focus {
+	background: #fff;
+	border-radius: 0.375rem;
+	box-shadow: 0 0 0 2px #0284C7;
+	clip: auto !important;
+	clip-path: none;
+	color: #0F172A;
+	display: block;
+	font-size: 0.875rem;
+	font-weight: 700;
+	height: auto;
+	left: 0.5rem;
+	padding: 0.75rem 1.25rem;
+	top: 0.5rem;
+	width: auto;
+	z-index: 100000;
+}
+
+/* ==========================================================================
+   Slide-down drawers (live search + mobile category menu)
+   Animates grid rows 0fr -> 1fr so no fixed heights are needed.
+   visibility keeps closed drawers out of the tab order.
+   ========================================================================== */
+
+.hp-drawer {
+	display: grid;
+	grid-template-rows: 0fr;
+	visibility: hidden;
+	transition: grid-template-rows 0.3s ease, visibility 0s linear 0.3s;
+}
+
+.hp-drawer.is-open {
+	grid-template-rows: 1fr;
+	visibility: visible;
+	transition: grid-template-rows 0.3s ease, visibility 0s linear 0s;
+}
+
+.hp-drawer-inner {
+	min-height: 0;
+	overflow: hidden;
+}
+
+/* The category menu is always open on desktop. */
+@media (min-width: 768px) {
+	.hp-nav-panel {
+		grid-template-rows: 1fr;
+		visibility: visible;
+		transition: none;
+	}
+}
+
+/* ==========================================================================
+   Category navigation (theme_location: primary)
+   ========================================================================== */
+
+.hp-sticky-nav { top: 0; }
+
+.admin-bar .hp-sticky-nav { top: 32px; }
+
+@media (max-width: 782px) {
+	.admin-bar .hp-sticky-nav { top: 46px; }
+}
+
+@media (max-width: 600px) {
+	.admin-bar .hp-sticky-nav { top: 0; }
+}
+
+.hp-nav-link {
+	border-bottom: 2px solid transparent;
+	color: #334155;
+	display: inline-block;
+	font-size: 0.9rem;
+	font-weight: 500;
+	padding: 0.95rem 0;
+	text-decoration: none;
+	transition: color 0.2s ease, border-color 0.2s ease;
+}
+
+.hp-nav-link:hover {
+	color: #0284C7;
+}
+
+.current-menu-item > .hp-nav-link,
+.current_page_item > .hp-nav-link,
+.current-menu-parent > .hp-nav-link,
+.current-menu-ancestor > .hp-nav-link,
+.current-page-ancestor > .hp-nav-link,
+.hp-nav-link[aria-current="page"] {
+	border-bottom-color: #0284C7;
+	color: #0284C7;
+	font-weight: 700;
+}
+
+@media (max-width: 767px) {
+	.hp-nav-link { padding: 0.65rem 0; }
+}
+
+/* ==========================================================================
+   Topic filter pills (front-page.php buttons use .hp-filter-btn)
+   ========================================================================== */
+
+.hp-filter-btn.is-active {
+	background-color: #0284C7;
+	border-color: #0284C7;
+	color: #fff;
+}
+
+#hp-article-grid[aria-busy="true"] {
+	opacity: 0.55;
+	pointer-events: none;
+	transition: opacity 0.2s ease;
+}
+
+/* ==========================================================================
+   Article / resource body copy (.entry-content)
+   ========================================================================== */
+
+.entry-content {
+	color: #334155;
+	font-size: 1.125rem;
+	line-height: 1.8;
+}
+
+.entry-content > * + * { margin-top: 1.4em; }
+
+.entry-content h2,
+.entry-content h3,
+.entry-content h4 {
+	color: #0F172A;
+	font-family: 'Newsreader', Georgia, serif;
+	font-weight: 600;
+	line-height: 1.25;
+	margin-top: 2em;
+}
+
+.entry-content h2 { font-size: 1.875rem; }
+.entry-content h3 { font-size: 1.5rem; }
+.entry-content h4 { font-size: 1.25rem; }
+
+.entry-content a {
+	color: #0284C7;
+	text-decoration: underline;
+	text-underline-offset: 3px;
+}
+
+.entry-content a:hover { color: #0369A1; }
+
+.entry-content ul,
+.entry-content ol { padding-left: 1.5rem; }
+.entry-content ul { list-style: disc; }
+.entry-content ol { list-style: decimal; }
+.entry-content li + li { margin-top: 0.4em; }
+
+.entry-content blockquote {
+	background: #F0F9FF;
+	border-left: 4px solid #0284C7;
+	border-radius: 0 0.5rem 0.5rem 0;
+	color: #0F172A;
+	font-family: 'Newsreader', Georgia, serif;
+	font-size: 1.25rem;
+	font-style: italic;
+	padding: 1rem 1.5rem;
+}
+
+.entry-content img,
+.entry-content video,
+.entry-content iframe {
+	border-radius: 0.5rem;
+	height: auto;
+	max-width: 100%;
+}
+
+.entry-content figcaption,
+.wp-caption-text {
+	color: #64748B;
+	font-size: 0.875rem;
+	margin-top: 0.5rem;
+}
+
+.entry-content table {
+	border-collapse: collapse;
+	font-size: 0.95rem;
+	width: 100%;
+}
+
+.entry-content th,
+.entry-content td {
+	border: 1px solid #E2E8F0;
+	padding: 0.6rem 0.85rem;
+	text-align: left;
+}
+
+.entry-content th { background: #F8FAFC; color: #0F172A; }
+
+.entry-content hr { border: 0; border-top: 1px solid #E2E8F0; }
+
+.entry-content code {
+	background: #F1F5F9;
+	border-radius: 0.25rem;
+	font-size: 0.9em;
+	padding: 0.15em 0.4em;
+}
+
+.entry-content pre {
+	background: #0F172A;
+	border-radius: 0.5rem;
+	color: #E2E8F0;
+	overflow-x: auto;
+	padding: 1rem 1.25rem;
+}
+
+.entry-content pre code { background: none; padding: 0; }
+
+/* WordPress core alignment + caption classes */
+.alignleft  { float: left;  margin: 0.25rem 1.5rem 1rem 0; }
+.alignright { float: right; margin: 0.25rem 0 1rem 1.5rem; }
+.aligncenter { clear: both; display: block; margin-left: auto; margin-right: auto; }
+.wp-caption { max-width: 100%; }
+.sticky { display: block; }
+
+/* ==========================================================================
+   Pagination (the_posts_pagination) for archive + search templates
+   ========================================================================== */
+
+.navigation.pagination .nav-links {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.5rem;
+	justify-content: center;
+}
+
+.navigation.pagination .page-numbers {
+	background: #fff;
+	border: 1px solid #E2E8F0;
+	border-radius: 0.5rem;
+	color: #334155;
+	font-size: 0.875rem;
+	font-weight: 600;
+	min-width: 2.5rem;
+	padding: 0.5rem 0.9rem;
+	text-align: center;
+	text-decoration: none;
+}
+
+.navigation.pagination a.page-numbers:hover {
+	border-color: #0284C7;
+	color: #0284C7;
+}
+
+.navigation.pagination .page-numbers.current {
+	background: #0284C7;
+	border-color: #0284C7;
+	color: #fff;
+}
